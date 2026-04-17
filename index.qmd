@@ -1,0 +1,115 @@
+---
+title: "Changes in Ho Chi Minh city map"
+---
+
+## Summary
+
+Changes in administrative levels in HCM city from 2000 - 2026
+
+-   **2003** - 2 new districts and reorganize communes ([source](https://vbpl.vn/TW/Pages/vbpqen-toanvan.aspx?ItemID=8462))
+
+    -   Tan Phu (split from Tan Binh)
+
+    -   Binh Tan (split from Binh Chanh)
+
+-   **2006** - Reorganize communes in 3 districts ([source](https://chinhphu.vn/default.aspx?pageid=27160&docid=17997))
+
+    -   Adjust communes in 3 districts: Go Vap, District 12, Tan Binh
+
+-   **2021** - Establish Thu Duc city and **more** commune adjustments ([source](https://www.quanlynhanuoc.vn/2020/12/31/nghi-quyet-so-1111-nq-ubtvqh14-ve-viec-sap-xep-don-vi-hanh-chinh-cap-huyen-cap-xa-va-thanh-lap-tp-thu-duc-thuoc-tp-hcm/#:~:text=C%E1%BB%A5%20th%E1%BB%83%2C%20th%C3%A0nh%20l%E1%BA%ADp%20TP,s%E1%BB%91%20h%C6%A1n%201%20tri%E1%BB%87u%20ng%C6%B0%E1%BB%9Di.))
+
+    -   Thu Duc city merged from 3 districts: 2, 9 and Thu Duc
+
+    -   Adjust communes under Thu Duc city
+
+-   **2023** - Reorganize communes (again) ([source](https://luatvietnam.vn/tin-van-ban-moi/sap-xep-dvhc-cap-xa-10-quan-cua-tp-hcm-giai-doan-2023-2025-186-100018-article.html))
+
+    -   Adjust communes in several districts: 3,4,5,6,8,10, 11,Phu Nhuan, Binh Thanh, Go Vap
+
+-   **2025** - Expand city and remove district level ([source](https://thuvienphapluat.vn/phap-luat/ho-tro-phap-luat/tra-cuu-168-phuong-xa-tphcm-chinh-thuc-sau-sap-nhap-nam-2025-day-du-chi-tiet-danh-sach-toan-bo-phuo-570655-223893.html))
+
+    -   Merge Binh Duong and Vung Tau to Ho Chi Minh city
+
+    -   Remove districts level, merge existing communes into 168 communes
+
+Overview
+
+-   **2000 - 2003:** 22 districts, 317 communes
+
+-   **2003 - 2021:** 24 districts, 322 communes
+
+-   **2021 - 2023:** 22 districts, 312 communes
+
+-   **2023 - 2025:** 22 districts, 273 communes
+
+-   **2025 - present (April, 2026):** 168 communes
+
+## Data
+
+Not all changes are reflected on open sourced shapefiles. The data are separated into 3 periods:
+
+-   GADM 4.1 (24 districts, 322 communes)
+
+    -   Manual merge into 22 districts, 322 communes
+
+-   GIS VN (168 communes)
+
+```{r}
+# Load some dependencies
+library(tidyverse)
+library(sf)
+library(janitor)
+```
+
+```{r}
+#| collapse: true
+#| summary: "Generate data"
+
+# Roughly HCMC spatial extent
+cropvector <- c(106.2, 107.2, 10.2, 11.3)
+# hcmc_extent <- ext(cropvector)
+
+district_24 <- read_sf("data/raw/before_reforms/gadm41_VNM_shp/gadm41_VNM_2.shp",
+                       options = "ENCODING=UTF-8") %>% 
+  clean_names() %>% 
+  st_crop(
+    xmin = cropvector[1],
+    xmax = cropvector[2],
+    ymin = cropvector[3],
+    ymax = cropvector[4]
+  ) %>%
+  filter(gid_1 == "VNM.25_1")
+
+district_24
+
+# The 22 districts map
+# TODO: manual merge
+
+# The 168 communes map
+commune_168 <- read_sf("data/raw/after_2025_reforms/Việt Nam (phường xã) - 34/",
+                       options = "ENCODING=UTF-8") %>% 
+  filter(ten_tinh == "TP. Hồ Chí Minh") 
+
+commune_168 %>% 
+  rename(
+    name_1 = ten_tinh,
+    name_2 = ten_xa,
+    type_2 = loai
+  )
+```
+
+Data format
+
+```{r}
+
+```
+
+```{r}
+# Download data
+```
+
+## Visualize
+
+Plot changes in HCM (at admin lvl 2)
+
+Plot changes in HCM (at admin lvl 3)
