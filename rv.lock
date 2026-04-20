@@ -69,6 +69,13 @@ dependencies = [
 ]
 
 [[packages]]
+name = "av"
+version = "0.9.6"
+source = { repository = "https://packagemanager.posit.co/cran/latest" }
+force_source = false
+dependencies = []
+
+[[packages]]
 name = "backports"
 version = "1.5.1"
 source = { repository = "https://packagemanager.posit.co/cran/latest" }
@@ -144,6 +151,22 @@ dependencies = [
     "mime",
     "rlang",
     { name = "sass", requirement = "(>= 0.4.9)" },
+]
+
+[[packages]]
+name = "bsplus"
+version = "0.1.5"
+source = { repository = "https://packagemanager.posit.co/cran/latest" }
+force_source = false
+dependencies = [
+    "htmltools",
+    "magrittr",
+    "purrr",
+    "lubridate",
+    "stringr",
+    "rmarkdown",
+    "glue",
+    "jsonlite",
 ]
 
 [[packages]]
@@ -293,6 +316,24 @@ force_source = false
 dependencies = []
 
 [[packages]]
+name = "downloadthis"
+version = "0.5.0"
+source = { repository = "https://packagemanager.posit.co/cran/latest" }
+force_source = false
+dependencies = [
+    "fs",
+    "readr",
+    "writexl",
+    "bsplus",
+    "mime",
+    "htmltools",
+    "magrittr",
+    "zip",
+    "ggplot2",
+    "base64enc",
+]
+
+[[packages]]
 name = "dplyr"
 version = "1.2.1"
 source = { repository = "https://packagemanager.posit.co/cran/latest" }
@@ -423,6 +464,25 @@ force_source = false
 dependencies = [
     { name = "terra", requirement = "(>= 1.6.41)" },
     "rappdirs",
+]
+
+[[packages]]
+name = "gganimate"
+version = "1.0.11"
+source = { repository = "https://packagemanager.posit.co/cran/latest" }
+force_source = false
+dependencies = [
+    { name = "ggplot2", requirement = "(>= 3.5.2)" },
+    "cli",
+    "glue",
+    "lifecycle",
+    "progress",
+    "rlang",
+    "scales",
+    "stringi",
+    { name = "transformr", requirement = "(>= 0.1.5)" },
+    { name = "tweenr", requirement = "(>= 2.0.3)" },
+    "vctrs",
 ]
 
 [[packages]]
@@ -686,6 +746,16 @@ force_source = false
 dependencies = []
 
 [[packages]]
+name = "later"
+version = "1.4.8"
+source = { repository = "https://packagemanager.posit.co/cran/latest" }
+force_source = false
+dependencies = [
+    { name = "Rcpp", requirement = "(>= 1.0.10)" },
+    "rlang",
+]
+
+[[packages]]
 name = "lattice"
 version = "0.21-8"
 source = { builtin = true }
@@ -741,6 +811,13 @@ dependencies = [
     { name = "cli", requirement = "(>= 3.4.0)" },
     { name = "rlang", requirement = "(>= 1.1.0)" },
 ]
+
+[[packages]]
+name = "lpSolve"
+version = "5.6.23"
+source = { repository = "https://packagemanager.posit.co/cran/latest" }
+force_source = false
+dependencies = []
 
 [[packages]]
 name = "lubridate"
@@ -883,6 +960,26 @@ dependencies = [
     { name = "magrittr", requirement = "(>= 1.5.0)" },
     { name = "rlang", requirement = "(>= 1.1.1)" },
     { name = "vctrs", requirement = "(>= 0.6.3)" },
+]
+
+[[packages]]
+name = "quarto"
+version = "1.5.1"
+source = { repository = "https://packagemanager.posit.co/cran/latest" }
+force_source = false
+dependencies = [
+    "cli",
+    "fs",
+    "htmltools",
+    "jsonlite",
+    "later",
+    "lifecycle",
+    "processx",
+    "rlang",
+    "rmarkdown",
+    "rstudioapi",
+    "xfun",
+    { name = "yaml", requirement = "(>= 2.3.10)" },
 ]
 
 [[packages]]
@@ -1296,6 +1393,33 @@ dependencies = [
 ]
 
 [[packages]]
+name = "transformr"
+version = "0.1.5"
+source = { repository = "https://packagemanager.posit.co/cran/latest" }
+force_source = false
+dependencies = [
+    "tweenr",
+    "rlang",
+    "sf",
+    "lpSolve",
+    "vctrs",
+    "cpp11",
+]
+
+[[packages]]
+name = "tweenr"
+version = "2.0.3"
+source = { repository = "https://packagemanager.posit.co/cran/latest" }
+force_source = false
+dependencies = [
+    "farver",
+    "magrittr",
+    "rlang",
+    "vctrs",
+    { name = "cpp11", requirement = "(>= 0.4.2)" },
+]
+
+[[packages]]
 name = "tzdb"
 version = "0.5.0"
 source = { repository = "https://packagemanager.posit.co/cran/latest" }
@@ -1383,6 +1507,13 @@ force_source = false
 dependencies = []
 
 [[packages]]
+name = "writexl"
+version = "1.5.4"
+source = { repository = "https://packagemanager.posit.co/cran/latest" }
+force_source = false
+dependencies = []
+
+[[packages]]
 name = "xfun"
 version = "0.57"
 source = { repository = "https://packagemanager.posit.co/cran/latest" }
@@ -1402,6 +1533,13 @@ dependencies = [
 [[packages]]
 name = "yaml"
 version = "2.3.12"
+source = { repository = "https://packagemanager.posit.co/cran/latest" }
+force_source = false
+dependencies = []
+
+[[packages]]
+name = "zip"
+version = "2.3.3"
 source = { repository = "https://packagemanager.posit.co/cran/latest" }
 force_source = false
 dependencies = []

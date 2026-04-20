@@ -44,26 +44,31 @@ Overview
 
 -   **2025 - present (April, 2026):** 168 communes
 
-## Data
+## Data for R
 
-Not all changes are reflected on open sourced shapefiles. The data are separated into 3 periods:
+### Preparing data
 
--   GADM 4.1 (24 districts, 322 communes)
+Since not all changes are captured on open-sourced shapefile data, we can use available datasets for major changes and manually merge polygons for minor ones.
 
-    -   Manual merge into 22 districts, 322 communes
+Source for raw data
 
--   GIS VN (168 communes)
+-   **Before 2021 reform**: GADM 4.1 (24 districts, 322 communes)
 
-```{r}
+-   **After 2025 reform:** GIS VN (168 communes)
+
+```{r warning=FALSE, message=FALSE}
 # Load some dependencies
 library(tidyverse)
 library(sf)
+library(terra)
 library(janitor)
+library(stringi)
+library(downloadthis)
 ```
 
-```{r}
-#| collapse: true
-#| summary: "Generate data"
+```{r warning=FALSE, message=FALSE}
+#| code-fold: true
+#| code-summary: "Preparing district data"
 
 # Roughly HCMC spatial extent
 cropvector <- c(106.2, 107.2, 10.2, 11.3)
@@ -79,37 +84,217 @@ district_24 <- read_sf("data/raw/before_reforms/gadm41_VNM_shp/gadm41_VNM_2.shp"
     ymax = cropvector[4]
   ) %>%
   filter(gid_1 == "VNM.25_1")
+```
 
-district_24
-
-# The 22 districts map
-# TODO: manual merge
+```{r warning=FALSE, message=FALSE}
+#| code-fold: true
+#| code-summary: "Preparing commune data"
+commune_322 <- read_sf("data/raw/before_reforms/gadm41_VNM_shp/gadm41_VNM_3.shp",
+                       options = "ENCODING=UTF-8") %>% 
+  clean_names() %>% 
+  st_crop(
+    xmin = cropvector[1],
+    xmax = cropvector[2],
+    ymin = cropvector[3],
+    ymax = cropvector[4]
+  ) %>%
+  filter(gid_1 == "VNM.25_1")
 
 # The 168 communes map
 commune_168 <- read_sf("data/raw/after_2025_reforms/Việt Nam (phường xã) - 34/",
                        options = "ENCODING=UTF-8") %>% 
   filter(ten_tinh == "TP. Hồ Chí Minh") 
 
-commune_168 %>% 
+commune_168 <- commune_168 %>% 
   rename(
     name_1 = ten_tinh,
     name_2 = ten_xa,
-    type_2 = loai
+    type_2 = loai,
+    merged_fr = sap_nhap
+  ) %>% 
+  mutate(
+    # make it a bit more consistent
+    name_1 = str_remove(name_1, "TP. "),
+    varname_2 = stri_trans_general(name_2, id = "Latin-ASCII")
+  ) %>% 
+  select(
+    name_1, name_2, varname_2, type_2, merged_fr, geometry
   )
 ```
 
-Data format
+```{r warning=FALSE, message=FALSE}
+#| code-fold: true
+#| code-summary: "Merge function"
 
-```{r}
+# merge function
+merge_polygon <- function(sf_dat, merge_map=list(
+  "Thu Duc" = c("District 2", "District 9", "Thu Duc")
+), colname="varname_2"){
+  
+  walk(names(merge_map), \(new_shp) {
+    old_shps <- merge_map[[new_shp]]
+    
+    merged <- sf_dat  %>% 
+      filter(.data[[colname]] %in% old_shps) %>% 
+      st_union()
+    
+    if (new_shp %in% sf_dat[[colname]]) {
+      # new_shp already exists --> update its geometry and drop other old shapes
+      rm_shapes <- setdiff(old_shps, new_shp)
+      sf_dat <<- sf_dat  %>% 
+        mutate(geometry = if_else(.data[[colname]] == new_shp, merged, geometry)) %>%
+        filter(!(.data[[colname]] %in% rm_shapes))
+    } else {
+      # new_shp doesn't exist --> append new row and drop old shapes
+      new_row <- tibble("{colname}" := new_shp, geometry = merged) %>% st_sf()
+      sf_dat <<- sf_dat  %>% 
+        filter(!(.data[[colname]] %in% old_shps)) %>%
+        bind_rows(new_row)
+    }
+  })
 
+  sf_dat
+}
 ```
 
 ```{r}
+#| code-fold: true
+#| code-summary: "Data for download"
+hcmc_shapefile <- list(
+  boundary_pre_reform = district_24 %>% summarize(),
+  boundary_post_reform = commune_168 %>% summarize(),
+  district_24 = district_24, # sf
+  commune_322 = commune_322, # sf
+  commune_168 = commune_168, # sf
+  merge_polygon = merge_polygon # function to merge polygons
+)
+```
+
+### Download data
+
+Data for download is an R list with the following items
+
+-   `boundary_pre_reform` - HCM city boundary **before** merging with Vung Tau, Binh Duong
+
+-   `boundary_post_reform` - HCM city boundary **after** merging with Vung Tau, Binh Duong
+
+-   `district_24` - 24 districts in HCM city (during 2003 - 2021)
+
+-   `commune_322` - 322 communes in HCM city
+
+-   `commune_168` - 168 communes in HCM city (after 2025 reform)
+
+```{r}
 # Download data
+download_this(
+  hcmc_shapefile,
+  button_label = "Download hcmc shapefiles",
+  output_name = "hcmc_shapefiles",
+  output_extension = ".rds",
+  button_type = "primary",
+  has_icon = TRUE,
+  icon = "fa fa-save"
+)
+```
+
+### Using data
+
+`hcmc_shapefile$merge_polygon()` can be used to quickly merge districts or communes
+
+***Example:*** Generate district map during 2021 - 2023, with Thu Duc city
+
+```{r warning=FALSE, message=FALSE}
+thuduc_city <- hcmc_shapefile$merge_polygon(
+  hcmc_shapefile$district_24,
+  # specify merging D2, D9, Thu Duc into Thu Duc here
+  merge_map = list(
+    "Thu Duc city" = c("District 2", "District 9", "Thu Duc")
+  ),
+  colname="varname_2" # merging by variable varname_2 (i.e., district lvl)
+)
+
+ggplot(thuduc_city) +
+  geom_sf(aes(fill=varname_2))
+```
+
+***Example:*** Generate district map before 2003, without Tan Phu, Binh Tan
+
+```{r warning=FALSE, message=FALSE}
+pre_2003 <- hcmc_shapefile$merge_polygon(
+  hcmc_shapefile$district_24,
+  # generate data before the split 2003
+  merge_map = list(
+    "Tan Binh" = c("Tan Phu", "Tan Binh"),
+    "Binh Chanh" = c("Binh Tan", "Binh Chanh")
+  ),
+  colname="varname_2" # merging by variable varname_2 (i.e., district lvl)
+)
+
+ggplot(pre_2003) +
+  geom_sf(aes(fill=varname_2))
 ```
 
 ## Visualize
 
-Plot changes in HCM (at admin lvl 2)
+Plot changes in HCM city (at admin lvl 2)
 
-Plot changes in HCM (at admin lvl 3)
+```{r include=FALSE, eval=FALSE}
+#| code-fold: true
+#| code-summary: "Generate animation"
+library(gganimate)
+
+cropvector_postreform <- c(106, 107.8, 10.2, 12)
+
+hcm_sf_timeline <- bind_rows(
+  pre_2003 %>% mutate(period = "2000 - 2003"),
+  hcmc_shapefile$district_24 %>% mutate(period = "2003 - 2021"),
+  thuduc_city %>% mutate(period = "2021 - 2025"),
+  hcmc_shapefile$commune_168 %>% 
+    mutate(period = "2025 - present") %>% 
+    st_crop(
+      xmin = cropvector_postreform[1],
+      xmax = cropvector_postreform[2],
+      ymin = cropvector_postreform[3],
+      ymax = cropvector_postreform[4]
+    ) 
+)
+
+animation <- ggplot(hcm_sf_timeline) +
+  geom_sf(aes(fill = name_2)) +
+  transition_states(period, transition_length = 2, state_length = 1) +
+  labs(title = "HCMC Administrative Lvl. 2 Boundaries — {closest_state}") +
+  guides(fill = "none") +
+  theme_minimal()
+
+render <- gganimate::animate(animation, fps = 10, duration = 8, res=200,
+                             width = 1100, height = 900,
+                             renderer = av_renderer("outputs/hcmc_lvl2_change.mp4"))
+```
+
+```{r warning=FALSE, message=FALSE}
+#| code-fold: true
+#| code-summary: "Visualize changes"
+
+cropvector_postreform <- c(106, 107.8, 10.2, 12)
+
+walk2(
+  list("2000 - 2003", "2003 - 2021", "2021 - 2025", "2025 - present"),
+  list(pre_2003, hcmc_shapefile$district_24, thuduc_city, 
+       hcmc_shapefile$commune_168 %>% 
+        st_crop(
+          xmin = cropvector_postreform[1],
+          xmax = cropvector_postreform[2],
+          ymin = cropvector_postreform[3],
+          ymax = cropvector_postreform[4]
+        ) ),
+  \(period, shape){
+    plt <- ggplot(shape) +
+      geom_sf(aes(fill = varname_2)) +
+      labs(title = paste0("HCMC Administrative Lvl. 2 Boundaries ", period)) +
+      guides(fill = "none") +
+      theme_minimal()
+    
+    print(plt)
+  }
+)
+```

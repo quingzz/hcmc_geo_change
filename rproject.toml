@@ -20,5 +20,11 @@ dependencies = [
   "ggspatial",
   "geodata",
   "sf",
-  "janitor"
+  "janitor",
+  "downloadthis",
+  "terra",
+  "stringi",
+  "gganimate",
+  "av",
+  "quarto"
 ]
