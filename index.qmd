@@ -6,7 +6,7 @@ title: "Changes in Ho Chi Minh city map"
 
 Changes in administrative levels in HCM city from 2000 - 2026
 
--   **2003** - 2 new districts and reorganize communes ([source](https://thuvienphapluat.vn/van-ban/Bo-may-hanh-chinh/Nghi-dinh-130-2003-ND-CP-lap-quan-BinhTan-Phu-phuong-truc-thuoc-dieu-chinh-dia-gioi-hanh-chinh-phuong-thuoc-quan-xa-thi-tran-Binh-Chanh-Can-Gio-51572.aspx))
+-   **2003** - 2 new districts and reorganize communes ([ref](https://thuvienphapluat.vn/van-ban/Bo-may-hanh-chinh/Nghi-dinh-130-2003-ND-CP-lap-quan-BinhTan-Phu-phuong-truc-thuoc-dieu-chinh-dia-gioi-hanh-chinh-phuong-thuoc-quan-xa-thi-tran-Binh-Chanh-Can-Gio-51572.aspx))
 
     -   Tan Phu (split from Tan Binh)
 
