@@ -6,27 +6,27 @@ title: "Changes in Ho Chi Minh city map"
 
 Changes in administrative levels in HCM city from 2000 - 2026
 
--   **2003** - 2 new districts and reorganize communes ([source](https://vbpl.vn/TW/Pages/vbpqen-toanvan.aspx?ItemID=8462))
+-   **2003** - 2 new districts and reorganize communes ([source](https://thuvienphapluat.vn/van-ban/Bo-may-hanh-chinh/Nghi-dinh-130-2003-ND-CP-lap-quan-BinhTan-Phu-phuong-truc-thuoc-dieu-chinh-dia-gioi-hanh-chinh-phuong-thuoc-quan-xa-thi-tran-Binh-Chanh-Can-Gio-51572.aspx))
 
     -   Tan Phu (split from Tan Binh)
 
     -   Binh Tan (split from Binh Chanh)
 
--   **2006** - Reorganize communes in 3 districts ([source](https://chinhphu.vn/default.aspx?pageid=27160&docid=17997))
+-   **2006** - Reorganize communes in 3 districts ([ref](https://chinhphu.vn/default.aspx?pageid=27160&docid=17997))
 
     -   Adjust communes in 3 districts: Go Vap, District 12, Tan Binh
 
--   **2021** - Establish Thu Duc city and **more** commune adjustments ([source](https://www.quanlynhanuoc.vn/2020/12/31/nghi-quyet-so-1111-nq-ubtvqh14-ve-viec-sap-xep-don-vi-hanh-chinh-cap-huyen-cap-xa-va-thanh-lap-tp-thu-duc-thuoc-tp-hcm/#:~:text=C%E1%BB%A5%20th%E1%BB%83%2C%20th%C3%A0nh%20l%E1%BA%ADp%20TP,s%E1%BB%91%20h%C6%A1n%201%20tri%E1%BB%87u%20ng%C6%B0%E1%BB%9Di.))
+-   **2021** - Establish Thu Duc city and **more** commune adjustments ([ref](https://www.quanlynhanuoc.vn/2020/12/31/nghi-quyet-so-1111-nq-ubtvqh14-ve-viec-sap-xep-don-vi-hanh-chinh-cap-huyen-cap-xa-va-thanh-lap-tp-thu-duc-thuoc-tp-hcm/#:~:text=C%E1%BB%A5%20th%E1%BB%83%2C%20th%C3%A0nh%20l%E1%BA%ADp%20TP,s%E1%BB%91%20h%C6%A1n%201%20tri%E1%BB%87u%20ng%C6%B0%E1%BB%9Di.))
 
     -   Thu Duc city merged from 3 districts: 2, 9 and Thu Duc
 
     -   Adjust communes under Thu Duc city
 
--   **2023** - Reorganize communes (again) ([source](https://luatvietnam.vn/tin-van-ban-moi/sap-xep-dvhc-cap-xa-10-quan-cua-tp-hcm-giai-doan-2023-2025-186-100018-article.html))
+-   **2023** - Reorganize communes (again) ([ref](https://luatvietnam.vn/tin-van-ban-moi/sap-xep-dvhc-cap-xa-10-quan-cua-tp-hcm-giai-doan-2023-2025-186-100018-article.html))
 
     -   Adjust communes in several districts: 3,4,5,6,8,10, 11,Phu Nhuan, Binh Thanh, Go Vap
 
--   **2025** - Expand city and remove district level ([source](https://thuvienphapluat.vn/phap-luat/ho-tro-phap-luat/tra-cuu-168-phuong-xa-tphcm-chinh-thuc-sau-sap-nhap-nam-2025-day-du-chi-tiet-danh-sach-toan-bo-phuo-570655-223893.html))
+-   **2025** - Expand city and remove district level ([ref](https://thuvienphapluat.vn/phap-luat/ho-tro-phap-luat/tra-cuu-168-phuong-xa-tphcm-chinh-thuc-sau-sap-nhap-nam-2025-day-du-chi-tiet-danh-sach-toan-bo-phuo-570655-223893.html))
 
     -   Merge Binh Duong and Vung Tau to Ho Chi Minh city
 
@@ -184,7 +184,7 @@ Data for download is an R list with the following items
 
 -   `commune_168` - 168 communes in HCM city (after 2025 reform)
 
-```{r}
+```{r echo=FALSE}
 # Download data
 download_this(
   hcmc_shapefile,
@@ -234,7 +234,7 @@ ggplot(pre_2003) +
   geom_sf(aes(fill=varname_2))
 ```
 
-## Visualize
+## Plots
 
 Plot changes in HCM city (at admin lvl 2)
 
