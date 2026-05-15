@@ -108,7 +108,9 @@ commune_168 <- read_sf("data/raw/after_2025_reforms/Việt Nam (phường x
 commune_168 <- commune_168 %>% 
   rename(
     name_1 = ten_tinh,
+    id_1 = ma_tinh,
     name_2 = ten_xa,
+    id_2 = ma_xa,
     type_2 = loai,
     merged_fr = sap_nhap
   ) %>% 
@@ -118,7 +120,14 @@ commune_168 <- commune_168 %>%
     varname_2 = stri_trans_general(name_2, id = "Latin-ASCII")
   ) %>% 
   select(
-    name_1, name_2, varname_2, type_2, merged_fr, geometry
+    name_1,
+    id_1,
+    name_2,
+    id_2,
+    varname_2,
+    type_2,
+    merged_fr,
+    geometry
   )
 ```
 
