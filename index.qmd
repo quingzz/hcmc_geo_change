@@ -129,6 +129,12 @@ commune_168 <- commune_168 %>%
     merged_fr,
     geometry
   )
+
+# also 168 communes map but only mainland communes (no Con Dao island)
+commune_167_mainland <- commune_168 %>%
+  mutate(min_y = map(geometry, \(geom) st_bbox(geom)$ymin) %>% unlist()) %>%
+  filter(min_y > 9) %>%
+  select(-min_y)
 ```
 
 ```{r warning=FALSE, message=FALSE}
@@ -175,7 +181,8 @@ hcmc_shapefile <- list(
   district_24 = district_24, # sf
   commune_322 = commune_322, # sf
   commune_168 = commune_168, # sf
-  merge_polygon = merge_polygon # function to merge polygons
+  commune_167_mainland = commune_167_mainland, # sf
+  merge_poly_fn = merge_poly_fn # function to merge polygons
 )
 ```
 
@@ -191,7 +198,7 @@ Data for download is an R list with the following items
 
 -   `commune_322` - 322 communes in HCM city
 
--   `commune_168` - 168 communes in HCM city (after 2025 reform)
+- `commune_167_mainland` - Same as `commune_168` but only mainland communes (no Con Dao island)
 
 ```{r echo=FALSE}
 # Download data
